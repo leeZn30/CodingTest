@@ -10,8 +10,45 @@ using namespace std;
     두 정점 사이에 간선이 여러개일 수 있음
 */ 
 vector<int> visited;
-void DFS(map<int, vector<int>>, int);
-void BFS(map<int, vector<int>>, int);
+
+// 메모리 초과 발생
+void DFS(map<int, vector<int>> &graph, int vertex)
+{
+    if (find(visited.begin(), visited.end(), vertex) != visited.end())
+        return;
+
+    printf("%d ", vertex);
+    visited.push_back(vertex);
+
+    for (int i = 0; i < graph[vertex].size(); i++)
+    {
+        if (find(visited.begin(), visited.end(), graph[vertex][i]) == visited.end())  
+            DFS(graph, graph[vertex][i]);
+    }
+}
+
+void BFS(map<int, vector<int>> &graph, int v)
+{
+    queue<int> q;
+    q.push(v);
+    while(!q.empty())
+    {
+        int vertex = q.front();
+        q.pop();
+
+        if (find(visited.begin(), visited.end(), vertex) != visited.end())
+            continue;
+
+        printf("%d ", vertex);
+        visited.push_back(vertex);
+
+        for (int i = 0; i < graph[vertex].size(); i++)
+        {
+            if (find(visited.begin(), visited.end(), vertex) != visited.end())
+                q.push(graph[vertex][i]);
+        }
+    }
+}
 int main()
 {
     int n, m, v;
@@ -66,42 +103,4 @@ int main()
 
     // BFS
     BFS(graph, v);
-}
-
-// 메모리 초과 발생
-void DFS(map<int, vector<int>> graph, int vertex)
-{
-    if (find(visited.begin(), visited.end(), vertex) != visited.end())
-        return;
-
-    printf("%d ", vertex);
-    visited.push_back(vertex);
-
-    for (int i = 0; i < graph[vertex].size(); i++)
-    {
-        if (find(visited.begin(), visited.end(), graph[vertex][i]) == visited.end())  
-            DFS(graph, graph[vertex][i]);
-    }
-}
-
-void BFS(map<int, vector<int>> graph, int v)
-{
-    queue<int> q;
-    q.push(v);
-    while(!q.empty())
-    {
-        int vertex = q.front();
-        q.pop();
-
-        if (find(visited.begin(), visited.end(), vertex) != visited.end())
-            continue;
-
-        printf("%d ", vertex);
-        visited.push_back(vertex);
-
-        for (int i = 0; i < graph[vertex].size(); i++)
-        {
-            q.push(graph[vertex][i]);
-        }
-    }
 }
